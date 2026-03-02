@@ -33,7 +33,7 @@ public class GoldBankAccountTest {
         final int withdraw = 200;
         this.account.deposit(deposit);
         this.account.withdraw(withdraw);
-        assertEquals(deposit - withdraw - GoldBankAccount.FEE, this.account.getBalance());
+        assertEquals(deposit - withdraw, this.account.getBalance());
     }
 
     @Test

@@ -2,7 +2,6 @@ package it.unibo.pps.e1;
 
 public class GoldBankAccount implements BankAccount {
 
-    public static int FEE = 0;
     public static int MAX_OVERDRAFT = 500;
     private final BankAccount base;
 
@@ -22,9 +21,9 @@ public class GoldBankAccount implements BankAccount {
 
     @Override
     public void withdraw(int amount) {
-        if (this.getBalance() < (amount + FEE) - MAX_OVERDRAFT) {
+        if (this.getBalance() < amount - MAX_OVERDRAFT) {
             throw new IllegalStateException();
         }
-        this.base.withdraw(amount + FEE);
+        this.base.withdraw(amount);
     }
 }

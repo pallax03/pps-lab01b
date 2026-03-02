@@ -5,7 +5,6 @@ import java.util.function.Function;
 public class BronzeBankAccount implements BankAccount {
 
     public static final Function<Integer, Integer> FEE = amount -> amount < 100 ? 0 : 1;
-    public static final int MAX_OVERDRAFT = 0;
     private final BankAccount base;
 
     public BronzeBankAccount(final BankAccount base) {
@@ -24,7 +23,7 @@ public class BronzeBankAccount implements BankAccount {
 
     @Override
     public void withdraw(final int amount) {
-        if (this.getBalance() < (amount + FEE.apply(amount)) - MAX_OVERDRAFT) {
+        if (this.getBalance() < (amount + FEE.apply(amount))) {
             throw new IllegalStateException();
         }
         this.base.withdraw(amount + FEE.apply(amount));
