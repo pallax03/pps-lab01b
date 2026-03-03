@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class LogicTest {
 
-  private static final int DEFAULT_SIZE = 5;
-  private Pair<Integer, Integer> knightStartPos;
-  private Pair<Integer, Integer> pawnStartPos;
+  private final int defaultSize = 5;
+  private Pieces knight;
+  private Pieces pawn;
   private Logics logic;
 
     /**
@@ -15,19 +15,27 @@ public class LogicTest {
      */
   @BeforeEach
   public void initBoardWithFixedKnightAndPawn() {
-    this.knightStartPos = new Pair<>(0, 0);
-    this.pawnStartPos = new Pair<>(1, 2);
-    this.logic = new LogicsImpl(DEFAULT_SIZE, this.knightStartPos, this.pawnStartPos);
+    this.knight = new Knight(new Pair<>(0, 0));
+    this.pawn = new Pawn(new Pair<>(1, 2));
+    Board board = new BoardImpl(this.defaultSize);
+    this.logic = new LogicsImpl(board, this.knight, this.pawn);
   }
 
   @Test
   public void knightInsideBoard() {
-    assertTrue(this.logic.hasKnight(this.knightStartPos.getX(), this.knightStartPos.getY()));
+    assertTrue(this.logic.hasKnight(this.knight.getPosition().getX(), this.knight.getPosition().getY()));
   }
 
   @Test
   public void knightMoveOutsideBoard() {
-    assertThrows(IndexOutOfBoundsException.class, () -> logic.hit(DEFAULT_SIZE, 0));
+    assertThrows(IndexOutOfBoundsException.class, () -> logic.hit(this.defaultSize, 0));
+  }
+
+  @Test
+  public void knightMoveAllowed() {
+    Pair<Integer, Integer> knightNewPosition = new Pair<>(this.knight.getPosition().getX()+1, this.knight.getPosition().getY()+2);
+    this.logic.hit(knightNewPosition.getX(), knightNewPosition.getY());
+    assertTrue(this.logic.hasKnight(knightNewPosition.getX(), knightNewPosition.getY()));
   }
 
   @Test
@@ -39,6 +47,6 @@ public class LogicTest {
 
   @Test
   public void knightHitPawnSuccessfully() {
-    assertTrue(this.logic.hit(this.pawnStartPos.getX(), this.pawnStartPos.getY()));
+    assertTrue(this.logic.hit(this.pawn.getPosition().getX(), this.pawn.getPosition().getY()));
   }
 }
