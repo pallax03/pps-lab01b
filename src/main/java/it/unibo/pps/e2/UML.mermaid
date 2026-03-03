@@ -1,0 +1,73 @@
+classDiagram
+  class Logics {
+    <<interface>>
+    +hit(row: int, cool: int) boolean
+    +hasKnight(row: int, col: int) boolean
+    +hasPawn(row: int, col: int) boolean
+  }
+
+   class LogicsImpl {
+      -pawn: Pair~Integer, Integer~
+      -knight: Pair~Integer, Integer~
+      -board: Board
+      +LogicImpl(board: Board)
+      +LogicImpl(board: Board, knight: Pair, pawn: Pair)
+      -randomEmptyPosition() Pair~Integer, Integer~
+   }
+
+  class Board {
+    <<interface>>
+    +isPositionOutOfBoard(position: Pair~Integer, Integer~) boolean
+    +randomPosition() Pair~Integer, Integer~
+  }
+
+  class BoardImpl {
+    -size: int
+    -random: Random
+    +BoardImpl(size: int)
+  }
+
+  class MoveStrategy {
+    <<FunctionalInteraface>>
+    +moveAllowed(from: Pair~Integer, Integer~, to: Pair~Integer, Integer~) boolean
+    +knight()$ MoveStrategy
+    +pawn()$ MoveStrategy
+  }
+
+Logics <|.. LogicsImpl : implements
+Board <|.. BoardImpl : implements
+LogicsImpl --> Board : board
+LogicsImpl ..> MoveStrategy : uses
+
+
+  class MoveStrategyTest {
+    <<test>>
+    +pawnCannotMove()
+    +knightAllowedMove()
+  }
+
+  class BoardTest {
+    <<test>>
+    -board: Board
+    +checkBoardBounds()
+  }
+
+  class LogicTest {
+    <<test>>
+    -logic: Logics
+    -knight: Pair
+    -pawn: Pair
+    +knightInsideBoard()
+    +knightMoveOutsideBoard()
+    +knightMoveAllowed()
+    +knightMoveNotAllowedWillNotMoveTheKnight()
+    +knightHitPawnSuccessfully()
+  }
+
+
+MoveStrategyTest ..> MoveStrategy : tests
+BoardTest ..> Board : tests
+BoardTest ..> BoardImpl : instantiates
+LogicTest ..> BoardImpl : instantiates
+LogicTest ..> Logics : tests
+LogicTest ..> LogicsImpl : instantiates

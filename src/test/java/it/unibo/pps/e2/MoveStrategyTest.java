@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class MoveAllowedTest {
+public class MoveStrategyTest {
 
   @Test
-  public void pawnCanNotMove() {
+  public void pawnCannotMove() {
     MoveStrategy pawn = MoveStrategy.pawn();
     assertFalse(pawn.moveAllowed(new Pair<>(0, 0), new Pair<>(1, 0)));
   }
