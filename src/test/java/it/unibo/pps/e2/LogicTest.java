@@ -6,24 +6,24 @@ import static org.junit.jupiter.api.Assertions.*;
 public class LogicTest {
 
   private final int defaultSize = 5;
-  private Pieces knight;
-  private Pieces pawn;
+  private Pair<Integer, Integer> knight;
+  private Pair<Integer, Integer> pawn;
   private Logics logic;
 
     /**
-     * Chose a pawn position where the knight can move.
+     * Chosen a pawn position where the knight can move and hit.
      */
   @BeforeEach
   public void initBoardWithFixedKnightAndPawn() {
-    this.knight = new Knight(new Pair<>(0, 0));
-    this.pawn = new Pawn(new Pair<>(1, 2));
+    this.knight = new Pair<>(0, 0);
+    this.pawn = new Pair<>(1, 2);
     Board board = new BoardImpl(this.defaultSize);
     this.logic = new LogicsImpl(board, this.knight, this.pawn);
   }
 
   @Test
   public void knightInsideBoard() {
-    assertTrue(this.logic.hasKnight(this.knight.getPosition().getX(), this.knight.getPosition().getY()));
+    assertTrue(this.logic.hasKnight(this.knight.getX(), this.knight.getY()));
   }
 
   @Test
@@ -33,7 +33,7 @@ public class LogicTest {
 
   @Test
   public void knightMoveAllowed() {
-    Pair<Integer, Integer> knightNewPosition = new Pair<>(this.knight.getPosition().getX()+1, this.knight.getPosition().getY()+2);
+    Pair<Integer, Integer> knightNewPosition = new Pair<>(this.knight.getX()+1, this.knight.getY()+2);
     this.logic.hit(knightNewPosition.getX(), knightNewPosition.getY());
     assertTrue(this.logic.hasKnight(knightNewPosition.getX(), knightNewPosition.getY()));
   }
@@ -47,6 +47,6 @@ public class LogicTest {
 
   @Test
   public void knightHitPawnSuccessfully() {
-    assertTrue(this.logic.hit(this.pawn.getPosition().getX(), this.pawn.getPosition().getY()));
+    assertTrue(this.logic.hit(this.pawn.getX(), this.pawn.getY()));
   }
 }
