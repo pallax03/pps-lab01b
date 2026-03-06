@@ -16,7 +16,17 @@ public class GUI extends JFrame {
     private final Logics logics;
     
     public GUI(int size) {
-        this.logics = new LogicsImpl(size);
+        Bounds bounds = new BoundsImpl(size);
+        Grid grid = new GridBuilder()
+                .withBounds(bounds)
+                .withStrategy(MinePlacementStrategy.fixed(Set.of(
+                        new Pair<>(0, 0),
+                        new Pair<>(0, 1),
+                        new Pair<>(2, 2),
+                        new Pair<>(2, 3),
+                        new Pair<>(4, 4))))
+                .build();
+        this.logics = new LogicsImpl(bounds, grid);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setSize(100*size, 100*size);
         
@@ -26,14 +36,15 @@ public class GUI extends JFrame {
         ActionListener onClick = (e)->{
             final JButton bt = (JButton)e.getSource();
             final Pair<Integer,Integer> pos = buttons.get(bt);
-            boolean aMineWasFound = false; // call the logic here to tell it that cell at 'pos' has been seleced
+            boolean aMineWasFound = this.logics.hit(pos.getX(), pos.getY()); // call the logic here to tell it that cell at 'pos' has been seleced
             if (aMineWasFound) {
+                this.logics.showAll();
                 quitGame();
                 JOptionPane.showMessageDialog(this, "You lost!!");
             } else {
                 drawBoard();            	
             }
-            boolean isThereVictory = false; // call the logic here to ask if there is victory
+            boolean isThereVictory = this.logics.checkVictory(); // call the logic here to ask if there is victory
             if (isThereVictory){
                 quitGame();
                 JOptionPane.showMessageDialog(this, "You won!!");
@@ -48,6 +59,7 @@ public class GUI extends JFrame {
                 if (bt.isEnabled()){
                     final Pair<Integer,Integer> pos = buttons.get(bt);
                     // call the logic here to put/remove a flag
+                    logics.toggle(pos.getX(), pos.getY());
                 }
                 drawBoard(); 
             }
@@ -72,6 +84,11 @@ public class GUI extends JFrame {
             // call the logic here
             // if this button is a mine, draw it "*"
             // disable the button
+            if (logics.get(entry.getValue().getX(), entry.getValue().getY()) instanceof CellOutput.MineCell) {
+                entry.getKey().setText("💥");
+                entry.getKey().setEnabled(false);
+            }
+
     	}
     }
 
@@ -80,6 +97,12 @@ public class GUI extends JFrame {
             // call the logic here
             // if this button is a cell with counter, put the number
             // if this button has a flag, put the flag
+            if (logics.get(entry.getValue().getX(), entry.getValue().getY()) instanceof CellOutput.FlaggedCell) {
+                entry.getKey().setText("🚩");
+            } else if (logics.get(entry.getValue().getX(), entry.getValue().getY()) instanceof CellOutput.SafeCell(int value)) {
+                entry.getKey().setText(String.valueOf(value));
+                entry.getKey().setEnabled(false);
+            }
     	}
     }
     
