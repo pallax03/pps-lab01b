@@ -16,17 +16,7 @@ public class GUI extends JFrame {
     private final Logics logics;
     
     public GUI(int size) {
-        Bounds bounds = new BoundsImpl(size);
-        Grid grid = new GridBuilder()
-                .withBounds(bounds)
-                .withStrategy(MinePlacementStrategy.fixed(Set.of(
-                        new Pair<>(0, 0),
-                        new Pair<>(0, 1),
-                        new Pair<>(2, 2),
-                        new Pair<>(2, 3),
-                        new Pair<>(4, 4))))
-                .build();
-        this.logics = new LogicsImpl(bounds, grid);
+        this.logics = new LogicsImpl(size);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setSize(100*size, 100*size);
         
